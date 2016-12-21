@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <style>
+        #canvas1 {
+            border: 1px solid #eee;
+        }
+    </style>
+    <script>
+        "strict";
+        const parts = [
+            [100, 100, "textbox", 90, 40],
+            [100, 150, "textbox"],
+            [200, 150, "circle", 10],
+        ];
+        window.addEventListener("DOMContentLoaded", () => {
+            let canvas = document.getElementById('canvas1');
+            let context = canvas.getContext('2d');
+
+            for(let part of parts) {
+                let x = part[0], y = part[1], type = part[2];
+                switch (type) {
+                    case "textbox":
+                        {
+                            let width = part[3] || 50;
+                            let height = part[4] || 50;
+                            context.strokeRect(x, y, width, height);
+                        }
+                        break;
+                    case "circle":
+                        {
+                            let dist = part[3] || 50;
+                            context.beginPath();
+                            context.arc(x, y, dist, 0, Math.PI * 2, false);
+                            context.stroke();
+                        }
+                        break;
+                    default:
+                        break
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+<canvas id="canvas1" width="600" height="500"></canvas>
+</body>
+</html>
