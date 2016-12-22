@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script src="./lib/GraphPaint.js"></script>
+    <script src="./lib/Diagrams.js"></script>
+    <meta charset="UTF-8">
+    <title>Diagram</title>
+    <style>
+        #canvas1 {
+            border: 1px solid #eee;
+        }
+    </style>
+    <script>
+        "use strict";
+        const parts = [
+            ["textbox", "text1", 100, 50, "Start"],
+            ["textbox", "text2", 300, 50, "Exec1", "text1"],
+        ];
+        window.addEventListener("DOMContentLoaded", () => {
+            let diagrams = new Diagrams(parts);
+            diagrams.paint('canvas1');
+        });
+    </script>
+</head>
+<body>
+<canvas id="canvas1" width="600" height="500"></canvas>
+</body>
+</html>
