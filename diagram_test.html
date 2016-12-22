@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <meta charset="UTF-8">
     <script src="./lib/GraphPaint.js"></script>
     <script src="./lib/Diagrams.js"></script>
-    <meta charset="UTF-8">
     <title>Diagram</title>
     <style>
         #canvas1 {
@@ -13,8 +13,10 @@
     <script>
         "use strict";
         const parts = [
-            ["textbox", "text1", 100, 50, "Start"],
-            ["textbox", "text2", 300, 50, "Exec1", "text1"],
+            ["textbox", "text1", 50, 50, "Start"],
+            ["textbox", "text2", 200, 50, "Exec1", "text1"],
+            ["textbox", "text3", 350, 50, "Exec2", "text2"],
+            ["textbox", "text4", 500, 50, "End", "text3"],
         ];
         window.addEventListener("DOMContentLoaded", () => {
             let diagrams = new Diagrams(parts);
