@@ -15,18 +15,27 @@
             [50, 150, "textbox"],
             [200, 200, "circle", 10],
             [50, 210, "arrow", 60, 100],
+            [200, 50, "textbox", 100, 30, "Hello World"],
         ];
         window.addEventListener("DOMContentLoaded", () => {
             let canvas = document.getElementById('canvas1');
             let context = canvas.getContext('2d');
-
+            context.font = "10px sans-serif";
             for(let part of parts) {
                 let x = part[0], y = part[1], type = part[2];
                 switch (type) {
                     case "textbox":
                         {
                             let width = part[3] || 50,  height = part[4] || 50;
+                            let text = part[5];
                             context.strokeRect(x, y, width, height);
+                            if(text) {
+                                let metrics = context.measureText(text);
+                                let offsetX = (width - metrics.width) / 2;
+                                let offsetY = (height - 10) / 2;
+                                console.log("metrics", metrics);
+                                context.strokeText(text, x + offsetX, y + offsetY + 10);
+                            }
                         }
                         break;
                     case "circle":
