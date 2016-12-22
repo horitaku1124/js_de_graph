@@ -9,11 +9,12 @@
         }
     </style>
     <script>
-        "strict";
+        "use strict";
         const parts = [
-            [100, 100, "textbox", 90, 40],
-            [100, 150, "textbox"],
-            [200, 150, "circle", 10],
+            [50, 50, "textbox", 90, 40],
+            [50, 150, "textbox"],
+            [200, 200, "circle", 10],
+            [50, 210, "arrow", 60, 100],
         ];
         window.addEventListener("DOMContentLoaded", () => {
             let canvas = document.getElementById('canvas1');
@@ -24,16 +25,48 @@
                 switch (type) {
                     case "textbox":
                         {
-                            let width = part[3] || 50;
-                            let height = part[4] || 50;
+                            let width = part[3] || 50,  height = part[4] || 50;
                             context.strokeRect(x, y, width, height);
                         }
                         break;
                     case "circle":
                         {
-                            let dist = part[3] || 50;
+                            let radius = part[3] || 50;
                             context.beginPath();
-                            context.arc(x, y, dist, 0, Math.PI * 2, false);
+                            context.arc(x, y, radius, 0, Math.PI * 2, false);
+                            context.stroke();
+                        }
+                        break;
+                    case "arrow":
+                        {
+                            let angle = -Math.PI * (part[3] || 0 ) / 180;
+                            let radius = part[4] || 50;
+                            let stopX = x + radius * Math.cos(angle);
+                            let stopY = y + radius * Math.sin(angle);
+                            context.beginPath();
+                            context.moveTo(x, y);
+                            context.lineTo(stopX, stopY);
+                            context.closePath();
+                            context.stroke();
+
+                            let leaf = radius / 10;
+                            let lStopX = stopX - leaf * Math.cos(angle + Math.PI / 4);
+                            let lStopY = stopY - leaf * Math.sin(angle + Math.PI / 4);
+
+                            context.beginPath();
+                            context.moveTo(lStopX, lStopY);
+                            context.lineTo(stopX, stopY);
+                            context.closePath();
+                            context.stroke();
+
+                            lStopX = stopX - leaf * Math.cos(angle - Math.PI / 4);
+                            lStopY = stopY - leaf * Math.sin(angle - Math.PI / 4);
+                            context.lineTo(lStopX, stopY);
+
+                            context.beginPath();
+                            context.moveTo(lStopX, lStopY);
+                            context.lineTo(stopX, stopY);
+                            context.closePath();
                             context.stroke();
                         }
                         break;
