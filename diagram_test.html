@@ -13,12 +13,13 @@
     <script>
         "use strict";
         const parts = [
-            [DTextBox, "text1", 50, 50, "Start"],
-            [DTextBox, "text2", 200, 50, "Exec1", "text1"],
-            [DTextBox, "text3", 350, 50, "Exec2", "text2"],
-            [DTextBox, "text4", 500, 50, "End", "text3"],
-            [DTextBox, "text100", 50, 150, "Start2"],
-            [DTextBox, "text101", 200, 200, "Exec1", "text100"],
+            [DTextBox, "text1", 50, 50, "Start", ["text2"]],
+            [DTextBox, "text2", 200, 50, "Exec1", ["text3"]],
+            [DTextBox, "text3", 350, 50, "Exec2", ["text4"]],
+            [DTextBox, "text4", 500, 50, "End"],
+            [DTextBox, "text100", 50, 150, "Start2", ["text101"]],
+            [DTextBox, "text101", 200, 200, "Exec1"],
+            [DTextBox, "text102", 50, 250, "Start3", ["text101"]],
         ];
         window.addEventListener("DOMContentLoaded", () => {
             let diagrams = new Diagrams(parts);
