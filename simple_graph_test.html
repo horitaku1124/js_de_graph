@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <script src="./lib/GraphPaint.js"></script>
+    <script src="./lib/Diagrams.js"></script>
+    <script src="./lib/SimpleGraphs.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <title>SimpleGraph test</title>
+    <script>
+        "use strict";
+        const parts = [
+            [SGTextBox, "text1", "Start"],
+        ];
+        window.addEventListener("DOMContentLoaded", () => {
+            let simpleGraph = new SimpleGraphs(parts);
+            simpleGraph.paint('canvas1');
+        });
+    </script>
+</head>
+<body>
+<canvas id="canvas1" width="600" height="500"></canvas>
+</body>
+</html>
