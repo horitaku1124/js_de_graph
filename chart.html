@@ -28,9 +28,8 @@ window.addEventListener("DOMContentLoaded", () => {
   let graphHeight = canObj.h - offsetY - offsetHeight;
   let zeroPointX = offsetX + 1;
   let zeroPointXY = canObj.h  - offsetHeight;
-  console.log("paint start", performance.now()); // ms
-  console.log("graphWidth", graphWidth);
-  console.log("graphHeight", graphHeight);
+  console.time("paint start");
+  console.log("graphWidth", graphWidth, "graphHeight", graphHeight);
   ctx.strokeRect(offsetX, offsetY, canObj.w - offsetX - offsetWidth, canObj.h - offsetY - offsetHeight);
   ctx.stroke();
 
@@ -40,42 +39,42 @@ window.addEventListener("DOMContentLoaded", () => {
     data.push(Math.sin(2 * Math.PI *  i / 100));
   }
 
-  let min = Number.MAX_VALUE;
-  let max = Number.MIN_VALUE;
+  let min = Math.min.apply(null, data);
+  let max = Math.max.apply(null, data);
 
-  for (let i = 0;i < data.length;i++) {
-    let val = data[i];
-    if (val < min) {
-      min = val;
-    } else if (val > max) {
-      max = val;
-    }
-  }
-  console.log("min", min);
-  console.log("max", max);
+  console.log("min", min, "max", max);
 
   ctx.beginPath();
 
-  for (let i = 0;i < data.length;i++) {
+  ctx.translate(offsetX + 1, offsetY + graphHeight);
+  ctx.scale(1, -1);
+  const ratio = graphHeight / (max - min);
+  for (let i = 0;i <= data.length;i++) {
     let val = data[i];
-    let x = (graphWidth * i / data.length)  + offsetX;
-    let y = val * 100 + 100;
+    let x = ((graphWidth + 3) * i / data.length);
+    let y = (val - min) * ratio;
     ctx.lineTo(x, y);
   }
-
   ctx.stroke();
-
 
   ctx.fillStyle = '#000';
   ctx.font = '12px Sans-Serif';
 
+  ctx.scale(1, -1);
+  ctx.fillText(max.toString(), -20, offsetY - graphHeight);
+  ctx.fillText(min.toString(), -20, offsetY);
+  ctx.translate(-offsetX - 1, -offsetY - graphHeight);
+
+
+  ctx.fillStyle = '#000';
+  ctx.font = '12px Sans-Serif';
   ctx.textBaseline = 'hanging';
 
 
-  ctx.translate(zeroPointX, zeroPointXY);
+  ctx.translate(zeroPointX - 5, zeroPointXY);
   let txtWidth = 0;
   let diff = graphWidth * 10 / data.length;
-  for (let i = 0;i < data.length;i += 10) {
+  for (let i = 0;i <= data.length;i += 10) {
     ctx.rotate(-Math.PI * 75 / 180);
     let x = (graphWidth * i / data.length);
     let txt = "" + i;
@@ -86,13 +85,7 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.translate(diff, 0);
   }
 
-  // let txtWidth = ctx.measureText('Hello world!').width;
-  // console.log(txtWidth);
-  // ctx.translate(zeroPointX, zeroPointXY);
-  // ctx.rotate(-Math.PI * 75 / 180);
-  // ctx.fillText('Hello world!', -txtWidth, 0);
-
-  console.log("paint finish", performance.now()); // ms
+  console.timeEnd("paint start");
 
 });
 </script>
