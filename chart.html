@@ -11,6 +11,17 @@
 <script>
 "use strict";
 let canObj = {};
+
+function chooseAxisValues(data, splitNum) {
+  let axisValues = [];
+  axisValues.push(data[0]);
+  for (let i = 1;i < splitNum;i++) {
+    let index = parseInt(i / splitNum * data.length);
+    axisValues.push(index);
+  }
+  axisValues.push(data.length);
+  return axisValues;
+}
 window.addEventListener("DOMContentLoaded", () => {
   let canvas = document.getElementById('canvas1');
 
@@ -20,14 +31,16 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log(canObj);
   let ctx = canvas.getContext('2d');
   ctx.lineWidth = 0.5;
-  let offsetX = 30.5;
-  let offsetY = 10.5;
-  let offsetWidth = 20;
-  let offsetHeight = 120;
-  let graphWidth = canObj.w - offsetWidth - offsetX;
-  let graphHeight = canObj.h - offsetY - offsetHeight;
-  let zeroPointX = offsetX + 1;
-  let zeroPointXY = canObj.h  - offsetHeight;
+  const offsetX = 30.5;
+  const offsetY = 10.5;
+  const offsetWidth = 20;
+  const offsetHeight = 120;
+  const graphWidth = canObj.w - offsetWidth - offsetX;
+  const graphHeight = canObj.h - offsetY - offsetHeight;
+  const zeroPointX = offsetX + 1;
+  const zeroPointXY = canObj.h  - offsetHeight;
+  const axisNum = 10;
+  const axisRotate = 75 / 180 * Math.PI;
   console.time("paint start");
   console.log("graphWidth", graphWidth, "graphHeight", graphHeight);
   ctx.strokeRect(offsetX, offsetY, canObj.w - offsetX - offsetWidth, canObj.h - offsetY - offsetHeight);
@@ -39,8 +52,10 @@ window.addEventListener("DOMContentLoaded", () => {
     data.push(Math.sin(2 * Math.PI *  i / 100));
   }
 
-  let min = Math.min.apply(null, data);
-  let max = Math.max.apply(null, data);
+  const min = Math.min.apply(null, data);
+  const max = Math.max.apply(null, data);
+  const axisValues = chooseAxisValues(data, axisNum);
+  console.log(axisValues);
 
   console.log("min", min, "max", max);
 
@@ -73,15 +88,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
   ctx.translate(zeroPointX - 5, zeroPointXY);
   let txtWidth = 0;
-  let diff = graphWidth * 10 / data.length;
-  for (let i = 0;i <= data.length;i += 10) {
-    ctx.rotate(-Math.PI * 75 / 180);
-    let x = (graphWidth * i / data.length);
-    let txt = "" + i;
+  let diff = graphWidth / axisNum;
+  for (let i = 0;i <= axisNum;i++) {
+    ctx.rotate(-axisRotate);
+    let txt = "" + axisValues[i];
     let txtWidth = ctx.measureText(txt).width;
 
     ctx.fillText(txt, -txtWidth, 0);
-    ctx.rotate(Math.PI * 75 / 180);
+    ctx.rotate(axisRotate);
     ctx.translate(diff, 0);
   }
 
