@@ -8,96 +8,29 @@
     border: 1px solid #eee;
   }
 </style>
+  <!--
+<script type="module" >
+  import {CanvasChart} from './canvas_chart.mjs';
+  window.CanvasChart = CanvasChart;
+</script>
+-->
+<script src="./canvas_chart.mjs"></script>
 <script>
 "use strict";
-let canObj = {};
 
-function chooseAxisValues(data, splitNum) {
-  let axisValues = [];
-  axisValues.push(data[0]);
-  for (let i = 1;i < splitNum;i++) {
-    let index = parseInt(i / splitNum * data.length);
-    axisValues.push(index);
-  }
-  axisValues.push(data.length);
-  return axisValues;
-}
 window.addEventListener("DOMContentLoaded", () => {
-  let canvas = document.getElementById('canvas1');
-
-  canObj.w = canvas.width;
-  canObj.h = canvas.height;
-
-  console.log(canObj);
-  let ctx = canvas.getContext('2d');
-  ctx.lineWidth = 0.5;
-  const offsetX = 30.5;
-  const offsetY = 10.5;
-  const offsetWidth = 20;
-  const offsetHeight = 120;
-  const graphWidth = canObj.w - offsetWidth - offsetX;
-  const graphHeight = canObj.h - offsetY - offsetHeight;
-  const zeroPointX = offsetX + 1;
-  const zeroPointXY = canObj.h  - offsetHeight;
-  const axisNum = 10;
-  const axisRotate = 75 / 180 * Math.PI;
   console.time("paint start");
-  console.log("graphWidth", graphWidth, "graphHeight", graphHeight);
-  ctx.strokeRect(offsetX, offsetY, canObj.w - offsetX - offsetWidth, canObj.h - offsetY - offsetHeight);
-  ctx.stroke();
-
+  console.log(CanvasChart);
+  let canvasObj = new CanvasChart(document.getElementById('canvas1'));
   let data = [];
+  let axis = [];
 
   for (let i = 0;i < 100;i++) {
     data.push(Math.sin(2 * Math.PI *  i / 100));
+    axis.push(i);
   }
 
-  const min = Math.min.apply(null, data);
-  const max = Math.max.apply(null, data);
-  const axisValues = chooseAxisValues(data, axisNum);
-  console.log(axisValues);
-
-  console.log("min", min, "max", max);
-
-  ctx.beginPath();
-
-  ctx.translate(offsetX + 1, offsetY + graphHeight);
-  ctx.scale(1, -1);
-  const ratio = graphHeight / (max - min);
-  for (let i = 0;i <= data.length;i++) {
-    let val = data[i];
-    let x = ((graphWidth + 3) * i / data.length);
-    let y = (val - min) * ratio;
-    ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-
-  ctx.fillStyle = '#000';
-  ctx.font = '12px Sans-Serif';
-
-  ctx.scale(1, -1);
-  ctx.fillText(max.toString(), -20, offsetY - graphHeight);
-  ctx.fillText(min.toString(), -20, offsetY);
-  ctx.translate(-offsetX - 1, -offsetY - graphHeight);
-
-
-  ctx.fillStyle = '#000';
-  ctx.font = '12px Sans-Serif';
-  ctx.textBaseline = 'hanging';
-
-
-  ctx.translate(zeroPointX - 5, zeroPointXY);
-  let txtWidth = 0;
-  let diff = graphWidth / axisNum;
-  for (let i = 0;i <= axisNum;i++) {
-    ctx.rotate(-axisRotate);
-    let txt = "" + axisValues[i];
-    let txtWidth = ctx.measureText(txt).width;
-
-    ctx.fillText(txt, -txtWidth, 0);
-    ctx.rotate(axisRotate);
-    ctx.translate(diff, 0);
-  }
+  canvasObj.paint(data, axis);
 
   console.timeEnd("paint start");
 
