@@ -1,13 +1,14 @@
 "use strict";
 
-function chooseAxisValues(data, splitNum) {
+function chooseAxisValues(axis, data, splitNum) {
+  let useIndex = typeof axis === 'undefined';
   let axisValues = [];
-  axisValues.push(data[0]);
+  axisValues.push(useIndex ? 0 : axis[0]);
   for (let i = 1;i < splitNum;i++) {
     let index = parseInt(i / splitNum * data.length);
-    axisValues.push(index);
+    axisValues.push(useIndex ? index : axis[index]);
   }
-  axisValues.push(data.length);
+  axisValues.push(useIndex ? data.length : axis[axis.length - 1]);
   return axisValues;
 }
 
@@ -17,10 +18,9 @@ class CanvasChart {
   }
 
   paint(values, axis) {
-    let canObj = {};
-
-    canObj.w = this.canvas.width;
-    canObj.h = this.canvas.height;
+    let canObj = {
+      w: this.canvas.width, h: this.canvas.height
+    };
 
     let ctx = this.canvas.getContext('2d');
     ctx.lineWidth = 0.5;
@@ -41,9 +41,8 @@ class CanvasChart {
 
     const min = Math.min.apply(null, values);
     const max = Math.max.apply(null, values);
-    const axisValues = chooseAxisValues(values, axisNum);
-    console.log(axisValues);
-
+    const axisValues = chooseAxisValues(axis, values, axisNum);
+    // console.log(axisValues);
     console.log("min", min, "max", max);
 
     ctx.beginPath();
@@ -53,7 +52,7 @@ class CanvasChart {
     const ratio = graphHeight / (max - min);
     for (let i = 0;i <= values.length;i++) {
       let val = values[i];
-      let x = ((graphWidth + 3) * i / values.length);
+      let x = ((graphWidth) * i / values.length);
       let y = (val - min) * ratio;
       ctx.lineTo(x, y);
     }

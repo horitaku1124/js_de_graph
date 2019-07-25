@@ -20,17 +20,14 @@
 
 window.addEventListener("DOMContentLoaded", () => {
   console.time("paint start");
-  console.log(CanvasChart);
   let canvasObj = new CanvasChart(document.getElementById('canvas1'));
   let data = [];
-  let axis = [];
 
   for (let i = 0;i < 100;i++) {
     data.push(Math.sin(2 * Math.PI *  i / 100));
-    axis.push(i);
   }
 
-  canvasObj.paint(data, axis);
+  canvasObj.paint(data);
 
   console.timeEnd("paint start");
 
