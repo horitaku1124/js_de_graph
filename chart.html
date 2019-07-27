@@ -20,7 +20,7 @@
 
 window.addEventListener("DOMContentLoaded", () => {
   console.time("paint start");
-  let canvasObj = new CanvasChart(document.getElementById('canvas1'));
+  let canvasObj = new CanvasChart(document.getElementById('canvas1'), {axisNum: 20});
   let data = [];
 
   for (let i = 0;i < 100;i++) {
