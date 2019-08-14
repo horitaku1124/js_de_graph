@@ -19,23 +19,42 @@
 "use strict";
 
 window.addEventListener("DOMContentLoaded", () => {
-  console.time("paint start");
-  let canvasObj = new CanvasChart(document.getElementById('canvas1'), {axisNum: 20});
-  let data = [];
+  (function() {
+    console.time("paint start");
+    let canvasObj = new CanvasChart(document.getElementById('canvas1'), {axisNum: 20});
+    let data = [];
 
-  for (let i = 0;i < 100;i++) {
-    data.push(Math.sin(2 * Math.PI *  i / 100));
-  }
+    for (let i = 0;i < 100;i++) {
+      data.push(Math.sin(2 * Math.PI *  i / 100));
+    }
 
-  canvasObj.paint(data);
+    canvasObj.paint(data);
 
-  console.timeEnd("paint start");
+    console.timeEnd("paint start");
+  })();
 
+  (function() {
+    console.time("paint start2");
+    let canvasObj = new CanvasChart(document.getElementById('canvas2'), {axisNum: 20});
+    let data = [];
+
+    for (let i = 0;i < 100;i++) {
+      data.push(0.1234);
+    }
+
+    canvasObj.paint(data);
+
+    console.timeEnd("paint start2");
+  })();
 });
 </script>
 </head>
 <body>
-
-<canvas id="canvas1" width="600" height="500"></canvas>
+<p>
+  <canvas id="canvas1" width="600" height="500"></canvas>
+</p>
+<p>
+  <canvas id="canvas2" width="600" height="500"></canvas>
+</p>
 </body>
 </html>

@@ -23,6 +23,16 @@ class CanvasChart {
   }
 
   paint(values, axis) {
+    const findMin = ((values, ratio) => {
+      let min =  Math.min.apply(null, values);
+      return min < 0 ? min * ratio : min / ratio;
+    });
+    const findMax = ((values, ratio) => {
+      let max =  Math.max.apply(null, values);
+      return max > 0 ? max * ratio : max / ratio;
+    });
+
+
     let canObj = {
       w: this.canvas.width, h: this.canvas.height
     };
@@ -44,9 +54,8 @@ class CanvasChart {
     ctx.strokeRect(offsetX, offsetY, canObj.w - offsetX - offsetWidth, canObj.h - offsetY - offsetHeight);
     ctx.stroke();
 
-
-    const min = Math.min.apply(null, values);
-    const max = Math.max.apply(null, values);
+    const min = findMin(values, 1.2);
+    const max = findMax(values, 1.2);
     const axisValues = chooseAxisValues(axis, values, axisNum);
     // console.log(axisValues);
     console.log("min", min, "max", max);
@@ -54,6 +63,7 @@ class CanvasChart {
     // Axis line
     ctx.lineWidth = 0.5;
     ctx.strokeStyle = '#7777777f';
+    // vertical
     for (let i = 0;i < axisNum;i++) {
       let x = xAxisGap * i + offsetX;
       ctx.beginPath();
@@ -61,6 +71,11 @@ class CanvasChart {
       ctx.lineTo(x,offsetY + graphHeight);
       ctx.stroke();
     }
+    // horizon
+    ctx.beginPath();
+    ctx.moveTo(offsetX, offsetY + graphHeight / 2);
+    ctx.lineTo(offsetX + graphWidth,offsetY + graphHeight / 2);
+    ctx.stroke();
 
 
     // Paint main chart
@@ -84,6 +99,8 @@ class CanvasChart {
 
     ctx.scale(1, -1);
     ctx.fillText(max.toString(), -offsetX, offsetY - graphHeight);
+    let center = max - (max - min) / 2;
+    ctx.fillText(center.toString(), -offsetX, offsetY - graphHeight / 2);
     ctx.fillText(min.toString(), -offsetX, offsetY);
     ctx.translate(-offsetX - 1, -offsetY - graphHeight);
 
