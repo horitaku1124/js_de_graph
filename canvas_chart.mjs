@@ -4,7 +4,7 @@ function chooseAxisValues(axis, data, splitNum) {
   let useIndex = typeof axis === 'undefined';
   let axisValues = [];
   axisValues.push(useIndex ? 0 : axis[0]);
-  for (let i = 1;i < splitNum;i++) {
+  for (let i = 1; i < splitNum; i++) {
     let index = parseInt(i / splitNum * data.length);
     axisValues.push(useIndex ? index : axis[index]);
   }
@@ -24,11 +24,11 @@ class CanvasChart {
 
   paint(values, axis) {
     const findMin = ((values, ratio) => {
-      let min =  Math.min.apply(null, values);
+      let min = Math.min.apply(null, values);
       return min < 0 ? min * ratio : min / ratio;
     });
     const findMax = ((values, ratio) => {
-      let max =  Math.max.apply(null, values);
+      let max = Math.max.apply(null, values);
       return max > 0 ? max * ratio : max / ratio;
     });
 
@@ -46,7 +46,7 @@ class CanvasChart {
     const graphWidth = canObj.w - offsetWidth - offsetX;
     const graphHeight = canObj.h - offsetY - offsetHeight;
     const zeroPointX = offsetX + 1;
-    const zeroPointXY = canObj.h  - offsetHeight;
+    const zeroPointXY = canObj.h - offsetHeight;
     const axisNum = this.axisNum;
     const axisRotate = 75 / 180 * Math.PI;
     const xAxisGap = graphWidth / axisNum;
@@ -64,17 +64,17 @@ class CanvasChart {
     ctx.lineWidth = 0.5;
     ctx.strokeStyle = '#7777777f';
     // vertical
-    for (let i = 0;i < axisNum;i++) {
+    for (let i = 0; i < axisNum; i++) {
       let x = xAxisGap * i + offsetX;
       ctx.beginPath();
       ctx.moveTo(x, offsetY);
-      ctx.lineTo(x,offsetY + graphHeight);
+      ctx.lineTo(x, offsetY + graphHeight);
       ctx.stroke();
     }
     // horizon
     ctx.beginPath();
     ctx.moveTo(offsetX, offsetY + graphHeight / 2);
-    ctx.lineTo(offsetX + graphWidth,offsetY + graphHeight / 2);
+    ctx.lineTo(offsetX + graphWidth, offsetY + graphHeight / 2);
     ctx.stroke();
 
 
@@ -85,7 +85,7 @@ class CanvasChart {
     ctx.translate(offsetX + 1, offsetY + graphHeight);
     ctx.scale(1, -1);
     const ratio = graphHeight / (max - min);
-    for (let i = 0;i <= values.length;i++) {
+    for (let i = 0; i <= values.length; i++) {
       let val = values[i];
       let x = ((graphWidth) * i / values.length);
       let y = (val - min) * ratio;
@@ -111,7 +111,7 @@ class CanvasChart {
     ctx.textBaseline = 'hanging';
 
     ctx.translate(zeroPointX - 5, zeroPointXY);
-    for (let i = 0;i <= axisNum;i++) {
+    for (let i = 0; i <= axisNum; i++) {
       ctx.rotate(-axisRotate);
       let txt = "" + axisValues[i];
       let txtWidth = ctx.measureText(txt).width;
