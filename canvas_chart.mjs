@@ -1,28 +1,28 @@
 "use strict";
 
-function chooseAxisValues(axis, data, splitNum) {
-  let useIndex = typeof axis === 'undefined';
+function chooseAxisLabels(labels, data, splitNum) {
+  let useIndex = typeof labels === 'undefined';
   let axisValues = [];
-  axisValues.push(useIndex ? 0 : axis[0]);
+  axisValues.push(useIndex ? 0 : labels[0]);
   for (let i = 1; i < splitNum; i++) {
     let index = parseInt(i / splitNum * data.length);
-    axisValues.push(useIndex ? index : axis[index]);
+    axisValues.push(useIndex ? index : labels[index]);
   }
-  axisValues.push(useIndex ? data.length : axis[axis.length - 1]);
+  axisValues.push(useIndex ? data.length : labels[labels.length - 1]);
   return axisValues;
 }
 
 class CanvasChart {
   constructor(elm, config = {}) {
     this.canvas = elm;
-    this.offsetX = config["offsetX"] || 30.5;
+    this.offsetX = config["offsetX"] || 40.5;
     this.offsetY = config["offsetY"] || 10.5;
     this.offsetWidth = config["offsetWidth"] || 20;
     this.offsetHeight = config["offsetHeight"] || 120;
     this.axisNum = config["axisNum"] || 10;
   }
 
-  paint(values, axis) {
+  paint(values, labels) {
     const findMin = ((values, ratio) => {
       let min = Math.min.apply(null, values);
       return min < 0 ? min * ratio : min / ratio;
@@ -32,9 +32,8 @@ class CanvasChart {
       return max > 0 ? max * ratio : max / ratio;
     });
 
-
     let canObj = {
-      w: this.canvas.width, h: this.canvas.height
+      w: this.canvas.clientWidth, h: this.canvas.clientHeight
     };
 
     const ctx = this.canvas.getContext('2d');
@@ -56,7 +55,7 @@ class CanvasChart {
 
     const min = findMin(values, 1.2);
     const max = findMax(values, 1.2);
-    const axisValues = chooseAxisValues(axis, values, axisNum);
+    const axisValues = chooseAxisLabels(labels, values, axisNum);
     // console.log(axisValues);
     console.log("min", min, "max", max);
 
