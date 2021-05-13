@@ -20,7 +20,7 @@
 
 window.addEventListener("DOMContentLoaded", () => {
   (function() {
-    console.time("paint start");
+    console.time("paint1");
     let canvasObj = new CanvasChart(document.getElementById('canvas1'), {axisNum: 20});
     let data = [];
 
@@ -30,11 +30,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
     canvasObj.paint(data);
 
-    console.timeEnd("paint start");
+    console.timeEnd("paint1");
   })();
 
   (function() {
-    console.time("paint start2");
+    console.time("paint2");
     let canvasObj = new CanvasChart(document.getElementById('canvas2'), {axisNum: 20});
     let data = [];
 
@@ -44,7 +44,27 @@ window.addEventListener("DOMContentLoaded", () => {
 
     canvasObj.paint(data);
 
-    console.timeEnd("paint start2");
+    console.timeEnd("paint2");
+  })();
+
+  (function() {
+    console.time("paint3");
+    let canvasObj = new CanvasChart(document.getElementById('canvas3'), {axisNum: 10});
+    let data = [2, 4, 1, 2, 4, 1, 2, 4, 1, 2];
+
+    canvasObj.paint(data);
+
+    console.timeEnd("paint3");
+  })();
+  (function() {
+    console.time("paint4");
+    let canvasObj = new CanvasChart(document.getElementById('canvas4'), {axisNum: 10});
+    let data = [2, 4, 1, 2, 4, 1, 2, 4, 1, 2];
+    let labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+
+    canvasObj.paint(data, labels);
+
+    console.timeEnd("paint4");
   })();
 });
 </script>
@@ -55,6 +75,12 @@ window.addEventListener("DOMContentLoaded", () => {
 </p>
 <p>
   <canvas id="canvas2" width="600" height="500"></canvas>
+</p>
+<p>
+  <canvas id="canvas3" width="600" height="500"></canvas>
+</p>
+<p>
+  <canvas id="canvas4" width="600" height="500"></canvas>
 </p>
 </body>
 </html>

@@ -3,10 +3,10 @@
 function chooseAxisLabels(labels, data, splitNum) {
   let useIndex = typeof labels === 'undefined';
   let axisValues = [];
-  axisValues.push(useIndex ? 0 : labels[0]);
-  for (let i = 1; i < splitNum; i++) {
+  // axisValues.push(useIndex ? 0 : labels[0]);
+  for (let i = 0; i < splitNum - 1; i++) {
     let index = parseInt(i / splitNum * data.length);
-    axisValues.push(useIndex ? index : labels[index]);
+    axisValues.push(useIndex ? index + 1 : labels[index]);
   }
   axisValues.push(useIndex ? data.length : labels[labels.length - 1]);
   return axisValues;
@@ -18,7 +18,7 @@ class CanvasChart {
     this.offsetX = config["offsetX"] || 40.5;
     this.offsetY = config["offsetY"] || 10.5;
     this.offsetWidth = config["offsetWidth"] || 20;
-    this.offsetHeight = config["offsetHeight"] || 120;
+    this.offsetHeight = config["offsetHeight"] || 70;
     this.axisNum = config["axisNum"] || 10;
   }
 
@@ -48,16 +48,27 @@ class CanvasChart {
     const zeroPointXY = canObj.h - offsetHeight;
     const axisNum = this.axisNum;
     const axisRotate = 75 / 180 * Math.PI;
-    const xAxisGap = graphWidth / axisNum;
-    console.log("graphWidth", graphWidth, "graphHeight", graphHeight);
+    const xAxisGap = graphWidth / (axisNum - 1);
+    const xGraphGap = graphWidth / (values.length - 1);
+    console.log("graphWidth", graphWidth, "graphHeight", graphHeight, "axisNum", axisNum);
     ctx.strokeRect(offsetX, offsetY, canObj.w - offsetX - offsetWidth, canObj.h - offsetY - offsetHeight);
     ctx.stroke();
 
     const min = findMin(values, 1.2);
     const max = findMax(values, 1.2);
     const axisValues = chooseAxisLabels(labels, values, axisNum);
-    // console.log(axisValues);
+    console.log("labels", labels);
+    console.log("values", values);
+    console.log("axisValues", axisValues);
     console.log("min", min, "max", max);
+    const yAxisFormatRule = (val) => {
+      if (min > 1 && max > 1) {
+        return val.toFixed(0);
+      } else if (min > 0.1) {
+        return val.toFixed(4);
+      }
+      return val.toString()
+    }
 
     // Axis line
     ctx.lineWidth = 0.5;
@@ -84,9 +95,9 @@ class CanvasChart {
     ctx.translate(offsetX + 1, offsetY + graphHeight);
     ctx.scale(1, -1);
     const ratio = graphHeight / (max - min);
-    for (let i = 0; i <= values.length; i++) {
+    for (let i = 0; i < values.length; i++) {
       let val = values[i];
-      let x = ((graphWidth) * i / values.length);
+      let x = xGraphGap * i;
       let y = (val - min) * ratio;
       ctx.lineTo(x, y);
     }
@@ -97,10 +108,10 @@ class CanvasChart {
     ctx.font = '12px Sans-Serif';
 
     ctx.scale(1, -1);
-    ctx.fillText(max.toString(), -offsetX, offsetY - graphHeight);
+    ctx.fillText(yAxisFormatRule(max), -offsetX, offsetY - graphHeight);
     let center = max - (max - min) / 2;
-    ctx.fillText(center.toString(), -offsetX, offsetY - graphHeight / 2);
-    ctx.fillText(min.toString(), -offsetX, offsetY);
+    ctx.fillText(yAxisFormatRule(center), -offsetX, offsetY - graphHeight / 2);
+    ctx.fillText(yAxisFormatRule(min), -offsetX, offsetY);
     ctx.translate(-offsetX - 1, -offsetY - graphHeight);
 
 
@@ -110,7 +121,7 @@ class CanvasChart {
     ctx.textBaseline = 'hanging';
 
     ctx.translate(zeroPointX - 5, zeroPointXY);
-    for (let i = 0; i <= axisNum; i++) {
+    for (let i = 0; i < axisNum; i++) {
       ctx.rotate(-axisRotate);
       let txt = "" + axisValues[i];
       let txtWidth = ctx.measureText(txt).width;
