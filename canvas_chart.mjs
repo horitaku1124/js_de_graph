@@ -3,13 +3,36 @@
 function chooseAxisLabels(labels, data, splitNum) {
   let useIndex = typeof labels === 'undefined';
   let axisValues = [];
-  // axisValues.push(useIndex ? 0 : labels[0]);
   for (let i = 0; i < splitNum - 1; i++) {
     let index = parseInt(i / splitNum * data.length);
     axisValues.push(useIndex ? index + 1 : labels[index]);
   }
   axisValues.push(useIndex ? data.length : labels[labels.length - 1]);
   return axisValues;
+}
+
+const tei = 10;
+
+function findMinBorder(values, ratio) {
+  let min = Math.min.apply(null, values);
+  console.log("min", min);
+  const isNegative = min < 0;
+  min = isNegative ? -min * ratio : min / ratio;
+  let a = Math.floor(Math.log(min) / Math.log(tei));
+  console.log("a", a);
+  console.log("min / Math.pow(tei,  a)", min / Math.pow(tei,  a));
+  console.log("parseInt(min / Math.pow(tei,  a))", parseInt(min / Math.pow(tei,  a)) );
+  let smallerMin = parseInt(min / Math.pow(tei,  a)) * Math.pow(tei,  a);
+  return isNegative ? -smallerMin : smallerMin;
+}
+
+function findMaxBorder(values, ratio) {
+  let max = Math.max.apply(null, values);
+  const isNegative = max < 0;
+  max = isNegative ? -max / ratio : max * ratio;
+  let a = Math.floor(Math.log(max) / Math.log(tei));
+  let smallerMax = Math.ceil(max / Math.pow(tei,  a)) * Math.pow(tei,  a);
+  return isNegative ? -smallerMax : smallerMax;
 }
 
 class CanvasChart {
@@ -23,14 +46,6 @@ class CanvasChart {
   }
 
   paint(values, labels) {
-    const findMin = ((values, ratio) => {
-      let min = Math.min.apply(null, values);
-      return min < 0 ? min * ratio : min / ratio;
-    });
-    const findMax = ((values, ratio) => {
-      let max = Math.max.apply(null, values);
-      return max > 0 ? max * ratio : max / ratio;
-    });
 
     let canObj = {
       w: this.canvas.clientWidth, h: this.canvas.clientHeight
@@ -54,20 +69,19 @@ class CanvasChart {
     ctx.strokeRect(offsetX, offsetY, canObj.w - offsetX - offsetWidth, canObj.h - offsetY - offsetHeight);
     ctx.stroke();
 
-    const min = findMin(values, 1.2);
-    const max = findMax(values, 1.2);
+    const min = findMinBorder(values, 1.1);
+    const max = findMaxBorder(values, 1.1);
     const axisValues = chooseAxisLabels(labels, values, axisNum);
-    console.log("labels", labels);
-    console.log("values", values);
-    console.log("axisValues", axisValues);
+
     console.log("min", min, "max", max);
     const yAxisFormatRule = (val) => {
       if (min > 1 && max > 1) {
         return val.toFixed(0);
       } else if (min > 0.1) {
+        return val.toFixed(3);
+      } else {
         return val.toFixed(4);
       }
-      return val.toString()
     }
 
     // Axis line
